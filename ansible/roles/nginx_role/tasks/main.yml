@@ -1,0 +1,41 @@
+---
+- name: Tworzymy katalog do budowy obrazu
+  file:
+    path: /mpedzicki/demo-dockerfile
+    state: directory
+    owner: mpedzicki
+    group: mpedzicki
+    mode: '0755'
+
+- name: Kopiujemy plik Dockerfile
+  copy:
+    src: ./roles/nginx_role/files/Dockerfile
+    owner: mpedzicki
+    group: mpedzicki
+    dest: /mpedzicki/demo-dockerfile/Dockerfile
+
+- name: Kopiowanie pliku idefault.conf
+  template:
+    src: ./roles/nginx_role/templates/default.conf.j2
+    dest: /mpedzicki/demo-dockerfile/default.conf
+  vars:
+    message: "{{ custom_message | default('OK') }}"
+
+- name: Budowa obrazu Docker
+  community.docker.docker_image:
+    name: test-nginx
+    build: 
+      path: /mpedzicki/demo-dockerfile
+    source: build
+    state: present
+    tag: latest
+
+- name: Start kontenera
+  community.docker.docker_container:
+    name: alter-nginx
+    image: test-nginx:latest
+    state: started
+    ports:
+      - "80:80"
+    volumes:
+      - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
