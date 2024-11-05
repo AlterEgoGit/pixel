@@ -1,7 +1,8 @@
 ---
+- name: Konfiguracja dockera z nginx
 - hosts: localhost
-  become: yes
+  become: true
   roles:
     - role: nginx_role
       vars:
-        custom_message: "Test message"
+        nginx_role_custom_message: "Test message"
