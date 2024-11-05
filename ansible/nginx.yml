@@ -1,6 +1,6 @@
 ---
 - name: Konfiguracja dockera z nginx
-- hosts: localhost
+  hosts: localhost
   become: true
   roles:
     - role: nginx_role

@@ -19,11 +19,21 @@
   ansible.builtin.template:
     src: ./roles/nginx_role/templates/default.conf.j2
     owner: mpedzicki
-    group: mpedzick
+    group: mpedzicki
     mode: '0755'
     dest: /mpedzicki/demo-dockerfile/default.conf
   vars:
     message: "{{ custom_message | default('OK') }}"
+
+- name: Zatrzymujemy kontener
+  community.docker.docker_container:
+    name: alter-nginx
+    state: absent
+
+- name: Usuwamy obraz
+  community.docker.docker_image:
+    name: test-nginx
+    state: absent
 
 - name: Budowa obrazu Docker
   community.docker.docker_image:
@@ -40,6 +50,6 @@
     image: test-nginx:latest
     state: started
     ports:
-      - "80:80"
-    volumes:
-      - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
+      - "127.0.0.1:80:80"
+#    volumes:
+#      - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
