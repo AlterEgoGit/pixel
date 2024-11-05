@@ -23,7 +23,7 @@
     mode: '0755'
     dest: /mpedzicki/demo-dockerfile/default.conf
   vars:
-    message: "{{ custom_message | default('OK') }}"
+    message: "{{ nginx_role_custom_message | default('OK') }}"
 
 - name: Zatrzymujemy kontener
   community.docker.docker_container:
